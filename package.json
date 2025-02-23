@@ -11,7 +11,13 @@
   "license": "ISC",
   "devDependencies": {
     "@types/lodash": "4.17.15",
+    "@typescript-eslint/eslint-plugin": "8.24.1",
+    "@typescript-eslint/parser": "8.24.1",
+    "eslint": "9.21.0",
+    "eslint-config-prettier": "10.0.1",
+    "eslint-plugin-prettier": "5.2.3",
     "parcel": "2.13.3",
+    "prettier": "3.5.2",
     "typescript": "5.7.3"
   },
   "dependencies": {

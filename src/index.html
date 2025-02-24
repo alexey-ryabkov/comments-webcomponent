@@ -4,11 +4,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Web-components!</title>
+  <title>GameZone ~ Геймерский паблик</title>
 </head>
 
 <body>
-  <h1>Web-components!</h1>
+  <header class="container">
+    <nav class="grid">
+      <div>
+        <strong>GameZone</strong>
+      </div>
+      <ul>
+        <li><a href="#" class="contrast">Популярное</a></li>
+        <li><a href="#">Свежее</a></li>
+        <li><a href="#">Моя лента</a></li>
+      </ul>
+      <div>
+        <button>Написать пост</button>
+        <button class="secondary">Войти</button>
+      </div>
+    </nav>
+  </header>
+  <main class="container">
+    <article>
+      <h1>Топ-5 самых ожидаемых игр этого года</h1>
+      <img src="https://via.assets.so/game.jpg?w=1280&h=600"
+        alt="Картинка-превью: топ-5 самых ожидаемых игр этого года" />
+      <p>
+        В этом году нас ждёт множество захватывающих релизов, которые
+        обещают подарить незабываемые впечатления. От амбициозных RPG до
+        напряжённых шутеров — каждый найдёт игру по вкусу. Давайте разберёмся,
+        какие проекты уже сейчас вызывают ажиотаж у геймерского сообщества.
+      </p>
+      <p>
+        Начнем с амбициозного продолжения культовой франшизы, обещающего
+        революционные механики и потрясающий сюжет. Не остаются в стороне и
+        независимые студии, предлагающие оригинальные проекты, которые
+        заставят вас переосмыслить жанровые границы.
+      </p>
+    </article>
+    <post-comments>Тут будут комментарии!</post-comments>
+  </main>
+  <footer class="container">
+    <small>
+      <a href="https://github.com/alexey-ryabkov/comments-webcomponent?tab=readme-ov-file">О проекте</a>
+    </small>
+  </footer>
   <script type="module" src="./main.ts"></script>
 </body>
 

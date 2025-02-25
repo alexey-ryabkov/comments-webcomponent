@@ -1,26 +1,17 @@
 import { html } from 'htm/preact';
-import { uniqueId } from 'lodash';
-
-interface CommentData {
-  id: string;
-  user: {
-    avatar: string;
-    nickname: string;
-  };
-  timestamp: string;
-  text: string;
-  likes: number;
-  replies?: CommentData[];
-}
+import { uniqueId, now } from 'lodash';
+import { Comment } from './types';
 
 export class PostCommentsComponent extends HTMLElement {
   private shadow: ShadowRoot;
-  private data: CommentData;
+  private data: Comment;
+  private granted: string | undefined;
 
-  constructor(data: CommentData) {
+  constructor(data: Comment, granted?: string) {
     super();
     this.shadow = this.attachShadow({ mode: 'open' });
     this.data = data;
+    this.granted = granted;
     this.render();
   }
 
@@ -35,6 +26,32 @@ export class PostCommentsComponent extends HTMLElement {
     this.shadow
       .querySelector('.reply-btn')
       ?.addEventListener('click', () => this.handleReply());
+    this.shadow
+      .querySelector('.delete-btn')
+      ?.addEventListener('click', () => this.handleDelete());
+    this.shadow.querySelector('.reply-btn')?.addEventListener('click', () => {
+      const replyContainer = this.shadow.querySelector('.replies');
+      if (replyContainer && !replyContainer.querySelector('form')) {
+        replyContainer.appendChild(
+          this.createCommentForm((text) => {
+            const newReply: Comment = {
+              id: uniqueId('comment_'),
+              user: {
+                id: 'current_user',
+                avatar: 'https://placehold.co/50',
+                nickname: 'Вы',
+              },
+              timestamp: now(),
+              text,
+              likes: 0,
+              replies: [],
+            };
+            this.data.replies?.push(newReply);
+            this.update();
+          }),
+        );
+      }
+    });
   }
 
   private handleLike() {
@@ -45,15 +62,17 @@ export class PostCommentsComponent extends HTMLElement {
   private handleReply() {
     const reply = prompt('Введите ваш ответ:');
     if (reply) {
-      const newReply: CommentData = {
+      const newReply: Comment = {
         id: uniqueId('comment_'),
         user: {
+          id: 'current_user',
           avatar: 'https://placehold.co/50',
           nickname: 'Вы',
         },
-        timestamp: new Date().toLocaleString(),
+        timestamp: now(),
         text: reply,
         likes: 0,
+        replies: [],
       };
       this.data.replies = this.data.replies || [];
       this.data.replies.push(newReply);
@@ -61,8 +80,40 @@ export class PostCommentsComponent extends HTMLElement {
     }
   }
 
+  private handleDelete() {
+    if (
+      this.granted === 'admin' ||
+      (this.granted && this.granted === this.data.user.id)
+    ) {
+      this.data.deleted = true;
+      this.update();
+    }
+  }
+
+  private createCommentForm(onSubmit: (text: string) => void) {
+    const form = document.createElement('form');
+    form.innerHTML = `
+    <input type="text" class="comment-input" placeholder="Введите комментарий" required>
+    <button type="submit">Отправить</button>
+  `;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const input = form.querySelector('.comment-input') as HTMLInputElement;
+      if (input.value.trim()) {
+        onSubmit(input.value.trim());
+        input.value = '';
+      }
+    });
+    return form;
+  }
+
   private render() {
-    const { user, timestamp, text, likes, replies } = this.data;
+    const { user, timestamp, text, likes, replies, deleted } = this.data;
+    if (deleted) {
+      this.shadow.innerHTML = '<p>Комментарий удален</p>';
+      return;
+    }
+
     this.shadow.innerHTML = html`
       <style>
         :host {
@@ -80,7 +131,7 @@ export class PostCommentsComponent extends HTMLElement {
           width: 50px;
           height: 50px;
           border-radius: 50%;
-          background-image: url(${user.avatar});
+          background-image: url(${user.avatar || 'https://placehold.co/50'});
           background-size: cover;
         }
         .content {
@@ -101,21 +152,51 @@ export class PostCommentsComponent extends HTMLElement {
         <div class="avatar"></div>
         <div class="content">
           <div class="meta">
-            <strong>${user.nickname}</strong> — ${timestamp}
+            <strong>${user.nickname}</strong> —
+            ${new Date(timestamp).toLocaleString()}
           </div>
           <div class="text">${text}</div>
           <div class="actions">
             <button class="like-btn">❤️ ${likes}</button>
             <button class="reply-btn">Ответить</button>
+            ${this.granted === 'admin' || this.granted === user.id
+              ? '<button class="delete-btn">Удалить</button>'
+              : ''}
           </div>
           <div class="replies">
             ${(replies || [])
-              .map((reply) => new PostCommentsComponent(reply).outerHTML)
+              .map(
+                (reply) =>
+                  new PostCommentsComponent(reply, this.granted).outerHTML,
+              )
               .join('')}
           </div>
         </div>
       </div>
     `;
+
+    const commentFormContainer = document.createElement('div');
+    commentFormContainer.appendChild(
+      this.createCommentForm((text) => {
+        const newComment: Comment = {
+          id: uniqueId('comment_'),
+          user: {
+            id: 'current_user',
+            avatar: 'https://placehold.co/50',
+            nickname: 'Вы',
+          },
+          timestamp: now(),
+          text,
+          likes: 0,
+          replies: [],
+        };
+        this.data.replies = this.data.replies || [];
+        this.data.replies.push(newComment);
+        this.update();
+      }),
+    );
+
+    this.shadow.appendChild(commentFormContainer);
   }
 
   private update() {

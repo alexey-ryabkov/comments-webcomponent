@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GameZone ~ Геймерский паблик</title>
+  <script type="module" src="./main.ts"></script>
 </head>
 
 <body>
@@ -30,10 +31,10 @@
       <img src="https://via.assets.so/game.jpg?w=1280&h=600"
         alt="Картинка-превью: топ-5 самых ожидаемых игр этого года" />
       <p>
-        В этом году нас ждёт множество захватывающих релизов, которые
-        обещают подарить незабываемые впечатления. От амбициозных RPG до
-        напряжённых шутеров — каждый найдёт игру по вкусу. Давайте разберёмся,
-        какие проекты уже сейчас вызывают ажиотаж у геймерского сообщества.
+        В этом году нас ждёт множество захватывающих релизов, которые обещают
+        подарить незабываемые впечатления. От амбициозных RPG до напряжённых
+        шутеров — каждый найдёт игру по вкусу. Давайте разберёмся, какие
+        проекты уже сейчас вызывают ажиотаж у геймерского сообщества.
       </p>
       <p>
         Начнем с амбициозного продолжения культовой франшизы, обещающего
@@ -42,14 +43,181 @@
         заставят вас переосмыслить жанровые границы.
       </p>
     </article>
-    <post-comments>Тут будут комментарии!</post-comments>
+    <hr />
+    <aside>
+      <template id="post-comment-template">
+        <style>
+          :host {}
+
+          .post-comment {}
+
+          .post-comment__wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+          }
+
+          .post-comment__avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex: none;
+          }
+
+          .post-comment__avatar img {
+            object-fit: cover;
+            width: 100%;
+          }
+
+          .post-comment__meta {
+            font-size: 0.8rem;
+            color: gray;
+            flex: 1;
+          }
+
+          .post-comment__content {
+            width: 100%;
+          }
+
+          .post-comment__actions {
+            margin-top: 0.5rem;
+          }
+
+          .post-comment__replies {
+            margin-top: 1.5rem;
+            margin-left: 2rem;
+          }
+        </style>
+        <div class="post-comment">
+          <div class="post-comment__wrapper">
+            <div class="post-comment__avatar">
+              <slot name="avatar">
+                <img src="https://placehold.co/50" alt="Аватар пользователя не задан" />
+              </slot>
+            </div>
+            <div class="post-comment__meta">
+              <div class="post-comment__nickname">
+                <slot name="nickname">Анонимный пользователь</slot>
+              </div>
+              <div class="post-comment__datetime">
+                <slot name="datetime">неизвестное время</slot>
+              </div>
+            </div>
+            <div class="post-comment__content">
+              <slot />
+            </div>
+          </div>
+          <div class="post-comment__actions">
+            <button class="post-comment__like-btn" aria-label="Поставить лайк">
+              ❤️ <span class="post-comment__likes">0</span>
+            </button>
+            <button class="post-comment__reply-btn" aria-label="Ответить на комментарий">
+              Ответить
+            </button>
+            <button class="post-comment__delete-btn" aria-label="Удалить комментарий">
+              Удалить
+            </button>
+          </div>
+          <div class="post-comment__replies">
+            <slot name="replies" />
+          </div>
+        </div>
+      </template>
+      <form id="add-comment-form">
+        <textarea placeholder="Написать комментарий к посту..." required minlength="1" maxlength="1024"></textarea>
+        <button disabled>Отправить</button>
+        <button type="reset">Отменить</button>
+      </form>
+      <section id="post-comments-tread">
+        <article aria-label="Комментарий">
+          <post-comment likes="3" granted>
+            <time slot="datetime" datetime="2025-02-26T07:22:08">07:22:08, 26 февраля</time>
+            <div slot="nickname">
+              <strong aria-label="Никнейм пользователя">BluePill</strong>
+              <small>(это вы)</small>
+            </div>
+            <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" /> -->
+            <div aria-label="Текст комментария">
+              А причем тут скайрим?
+            </div>
+            <section slot="replies" aria-label="Ответы на комментарий">
+              <article aria-label="Комментарий">
+                <post-comment>
+                  <time slot="datetime" datetime="2025-02-26T07:35:43">07:35:43, 26 февраля</time>
+                  <strong slot="nickname" aria-label="Никнейм пользователя">~юный~скуф~</strong>
+                  <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" /> -->
+                  <div aria-label="Текст комментария">азаза</div>
+                </post-comment>
+              </article>
+            </section>
+          </post-comment>
+        </article>
+        <article aria-label="Комментарий">
+          <post-comment likes="1" deleted>
+            <time slot="datetime" datetime="2025-02-26T07:29:55">07:29:55, 26 февраля</time>
+            <strong slot="nickname" aria-label="Никнейм пользователя">P0w3r</strong>
+            <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Пиратик" /> -->
+            <div aria-label="Текст комментария">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
+              repellat, ea mollitia dolore vero voluptates eligendi eum beatae
+              amet, asperiores suscipit provident possimus soluta quas nam
+              sapiente sit voluptas rerum?
+            </div>
+            <section slot="replies" aria-label="Ответы на комментарий">
+              <article aria-label="Комментарий">
+                <post-comment likes="7" granted>
+                  <time slot="datetime" datetime="2025-02-26T07:37:49">07:37:49, 26 февраля</time>
+                  <div slot="nickname">
+                    <strong aria-label="Никнейм пользователя">BluePill</strong>
+                    <small>(это вы)</small>
+                  </div>
+                  <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" /> -->
+                  <div aria-label="Текст комментария">
+                    Лол, этот чел чсит даже за гифки, которые ему не
+                    нравятся
+                  </div>
+                  <section slot="replies" aria-label="Ответы на комментарий">
+                    <article aria-label="Комментарий">
+                      <post-comment reply-disabled>
+                        <time slot="datetime" datetime="2025-02-26T07:31:19">07:31:19, 26 февраля</time>
+                        <strong slot="nickname" aria-label="Никнейм пользователя">Симулякр</strong>
+                        <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" /> -->
+                        <div aria-label="Текст комментария">
+                          Че за гифка то?
+                        </div>
+                      </post-comment>
+                    </article>
+                    <article aria-label="Комментарий">
+                      <post-comment likes="1" reply-disabled>
+                        <time slot="datetime" datetime="2025-02-26T07:37:31">07:37:31, 26 февраля</time>
+                        <strong slot="nickname" aria-label="Никнейм пользователя">~юный~скуф~</strong>
+                        <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" /> -->
+                        <div aria-label="Текст комментария">кыш кыш отсюда</div>
+                      </post-comment>
+                    </article>
+                  </section>
+                </post-comment>
+              </article>
+            </section>
+          </post-comment>
+        </article>
+        <article aria-label="Комментарий">
+          <post-comment>
+            <time slot="datetime" datetime="2025-02-26T07:37:49">07:37:49, 26 февраля</time>
+            <strong slot="nickname" aria-label="Никнейм пользователя">Симулякр</strong>
+            <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" /> -->
+            <div aria-label="Текст комментария">Играю на изи сложности</div>
+          </post-comment>
+        </article>
+      </section>
+    </aside>
   </main>
   <footer class="container">
     <small>
       <a href="https://github.com/alexey-ryabkov/comments-webcomponent?tab=readme-ov-file">О проекте</a>
     </small>
   </footer>
-  <script type="module" src="./main.ts"></script>
 </body>
 
 </html>

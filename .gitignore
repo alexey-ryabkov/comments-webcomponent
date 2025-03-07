@@ -1,7 +1,8 @@
-.vscode
-.idea
 .DS_STORE
 Thumbs.db
+.idea
+.vscode/*
+!.vscode/*.example.json
 .parcel-cache
 node_modules
 dist

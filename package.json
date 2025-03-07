@@ -2,10 +2,13 @@
   "name": "comments-webcomponent",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "source": "src/index.html",
   "scripts": {
-    "dev": "parcel src/index.html",
-    "build": "parcel dist src/index.html",
+    "dev": "parcel",
+    "build": "parcel build",
+    "lint": "eslint \"**/*.ts\" --fix",
+    "format": "prettier \"**/*.{html,md}\" --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,7 +18,7 @@
     "@types/lodash": "4.17.15",
     "@typescript-eslint/eslint-plugin": "8.24.1",
     "@typescript-eslint/parser": "8.24.1",
-    "eslint": "9.21.0",
+    "eslint": "8.57.1",
     "eslint-config-prettier": "10.0.1",
     "eslint-plugin-prettier": "5.2.3",
     "parcel": "2.13.3",
@@ -24,7 +27,8 @@
   },
   "dependencies": {
     "@picocss/pico": "2.0.6",
-    "htm": "3.1.1",
-    "lodash": "4.17.21"
+    "dompurify": "3.2.4",
+    "lodash": "4.17.21",
+    "nanohtml": "1.10.0"
   }
 }

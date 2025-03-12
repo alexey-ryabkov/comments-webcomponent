@@ -1,3 +1,5 @@
+import { setElementDisabled } from '../../components/PostComment/utils';
+
 export type CommentInputEventDetail = {
   filled: boolean;
 };
@@ -16,7 +18,7 @@ export default function inputCommentEventHandler(
       'button:not([type="reset"])',
     ) as HTMLButtonElement | null;
 
-    if (inputCommentElement && commentButton) {
+    if (inputCommentElement) {
       const comment = inputCommentElement.value.trim();
       const minLength = Number(
         inputCommentElement.getAttribute('minlength') ?? 0,
@@ -29,8 +31,10 @@ export default function inputCommentEventHandler(
           detail: { filled: comment.length > 0 },
         }),
       );
-      commentButton.disabled =
-        comment.length < minLength || comment.length > maxLength;
+      setElementDisabled(
+        commentButton,
+        comment.length < minLength || comment.length > maxLength,
+      );
     }
   }
 }

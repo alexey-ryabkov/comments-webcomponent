@@ -1,6 +1,6 @@
 import DOMPurify from 'dompurify';
 import buildComment from '../builders/comment';
-import getCurUserCommentMeta from '../userCommentMeta';
+import { getCurUserCommentMeta } from '../mocks';
 
 export default function publishCommentEventHandler(
   publishCommentEvent: SubmitEvent,

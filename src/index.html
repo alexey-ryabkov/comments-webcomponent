@@ -51,9 +51,12 @@
 
           .post-comment {}
 
-          .post-comment__wrapper {
+          .post-comment__wrapper {}
+
+          .post-comment__meta {
+            font-size: 0.8rem;
+            color: gray;
             display: flex;
-            flex-wrap: wrap;
             gap: 1rem;
           }
 
@@ -70,10 +73,16 @@
             width: 100%;
           }
 
-          .post-comment__meta {
-            font-size: 0.8rem;
-            color: gray;
-            flex: 1;
+          .post-comment__nickname :not(small) {
+            font-weight: bold;
+          }
+
+          .post-comment__nickname+small {
+            display: none;
+          }
+
+          .post-comment__nickname_current+small {
+            display: initial;
           }
 
           .post-comment__content {
@@ -91,21 +100,32 @@
         </style>
         <div class="post-comment">
           <div class="post-comment__wrapper">
-            <div class="post-comment__avatar">
-              <slot name="avatar">
-                <img src="https://placehold.co/50" alt="Аватар пользователя не задан" />
-              </slot>
-            </div>
             <div class="post-comment__meta">
-              <div class="post-comment__nickname">
-                <slot name="nickname">Анонимный пользователь</slot>
+              <div class="post-comment__avatar">
+                <slot name="avatar">
+                  <img name="avatar" src="https://placehold.co/50" alt="Аватар пользователя не задан" />
+                </slot>
               </div>
-              <div class="post-comment__datetime">
-                <slot name="datetime">неизвестное время</slot>
+              <div>
+                <div>
+                  <span class="post-comment__nickname">
+                    <slot name="nickname">
+                      <strong aria-label="Никнейм пользователя">Анонимный пользователь</strong>
+                    </slot>
+                  </span>
+                  <small>(это вы)</small>
+                </div>
+                <div class="post-comment__datetime">
+                  <slot name="datetime">
+                    <time slot="datetime">неизвестное время</time>
+                  </slot>
+                </div>
               </div>
             </div>
             <div class="post-comment__content">
-              <slot />
+              <slot>
+                <div aria-label="Текст комментария"></div>
+              </slot>
             </div>
           </div>
           <div class="post-comment__actions">
@@ -120,7 +140,9 @@
             </button>
           </div>
           <div class="post-comment__replies">
-            <slot name="replies" />
+            <slot name="replies">
+              <section aria-label="Ответы на комментарий"></section>
+            </slot>
           </div>
         </div>
       </template>
@@ -129,87 +151,68 @@
         <button disabled>Отправить</button>
         <button type="reset">Отменить</button>
       </form>
+      <button id="add-comment-by-api">Добавить через API</button>
       <section id="post-comments-tread">
-        <article aria-label="Комментарий">
-          <post-comment likes="3" granted>
-            <time slot="datetime" datetime="2025-02-26T07:22:08">07:22:08, 26 февраля</time>
-            <div slot="nickname">
-              <strong aria-label="Никнейм пользователя">BluePill</strong>
-              <small>(это вы)</small>
-            </div>
-            <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" /> -->
-            <div aria-label="Текст комментария">
-              А причем тут скайрим?
-            </div>
-            <section slot="replies" aria-label="Ответы на комментарий">
-              <article aria-label="Комментарий">
+        <post-comment likes="3" by-current-user granted>
+          <time slot="datetime" datetime="2025-02-26T07:22:08">07:22:08, 26 февраля</time>
+          <strong slot="nickname" aria-label="Никнейм пользователя">BluePill</strong>
+          <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" />
+          <div aria-label="Текст комментария">
+            А причем тут скайрим?
+          </div>
+          <section slot="replies" aria-label="Ответы на комментарий">
+            <post-comment>
+              <time slot="datetime" datetime="2025-02-26T07:35:43">07:35:43, 26 февраля</time>
+              <strong slot="nickname" aria-label="Никнейм пользователя">~юный~скуф~</strong>
+              <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя ~юный~скуф~" />
+              <div aria-label="Текст комментария">азаза</div>
+            </post-comment>
+          </section>
+        </post-comment>
+        <post-comment likes="1" deleted>
+          <time slot="datetime" datetime="2025-02-26T07:29:55">07:29:55, 26 февраля</time>
+          <span slot="nickname" aria-label="Никнейм пользователя">P0w3r</span>
+          <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя P0w3r" />
+          <div aria-label="Текст комментария">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
+            repellat, ea mollitia dolore vero voluptates eligendi eum beatae
+            amet, asperiores suscipit provident possimus soluta quas nam
+            sapiente sit voluptas rerum?
+          </div>
+          <section slot="replies" aria-label="Ответы на комментарий">
+            <post-comment likes="7" by-current-user granted>
+              <time slot="datetime" datetime="2025-02-26T07:37:49">07:37:49, 26 февраля</time>
+              <span slot="nickname" aria-label="Никнейм пользователя">BluePill</span>
+              <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" />
+              <div aria-label="Текст комментария">
+                Лол, этот чел чсит даже за гифки, которые ему не
+                нравятся
+              </div>
+              <section slot="replies" aria-label="Ответы на комментарий">
                 <post-comment>
-                  <time slot="datetime" datetime="2025-02-26T07:35:43">07:35:43, 26 февраля</time>
-                  <strong slot="nickname" aria-label="Никнейм пользователя">~юный~скуф~</strong>
-                  <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" /> -->
-                  <div aria-label="Текст комментария">азаза</div>
-                </post-comment>
-              </article>
-            </section>
-          </post-comment>
-        </article>
-        <article aria-label="Комментарий">
-          <post-comment likes="1" deleted>
-            <time slot="datetime" datetime="2025-02-26T07:29:55">07:29:55, 26 февраля</time>
-            <strong slot="nickname" aria-label="Никнейм пользователя">P0w3r</strong>
-            <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Пиратик" /> -->
-            <div aria-label="Текст комментария">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
-              repellat, ea mollitia dolore vero voluptates eligendi eum beatae
-              amet, asperiores suscipit provident possimus soluta quas nam
-              sapiente sit voluptas rerum?
-            </div>
-            <section slot="replies" aria-label="Ответы на комментарий">
-              <article aria-label="Комментарий">
-                <post-comment likes="7" granted>
-                  <time slot="datetime" datetime="2025-02-26T07:37:49">07:37:49, 26 февраля</time>
-                  <div slot="nickname">
-                    <strong aria-label="Никнейм пользователя">BluePill</strong>
-                    <small>(это вы)</small>
-                  </div>
-                  <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" /> -->
+                  <time slot="datetime" datetime="2025-02-26T07:31:19">07:31:19, 26 февраля</time>
+                  <span slot="nickname" aria-label="Никнейм пользователя">Симулякр</span>
+                  <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" />
                   <div aria-label="Текст комментария">
-                    Лол, этот чел чсит даже за гифки, которые ему не
-                    нравятся
+                    Че за гифка то?
                   </div>
-                  <section slot="replies" aria-label="Ответы на комментарий">
-                    <article aria-label="Комментарий">
-                      <post-comment reply-disabled>
-                        <time slot="datetime" datetime="2025-02-26T07:31:19">07:31:19, 26 февраля</time>
-                        <strong slot="nickname" aria-label="Никнейм пользователя">Симулякр</strong>
-                        <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" /> -->
-                        <div aria-label="Текст комментария">
-                          Че за гифка то?
-                        </div>
-                      </post-comment>
-                    </article>
-                    <article aria-label="Комментарий">
-                      <post-comment likes="1" reply-disabled>
-                        <time slot="datetime" datetime="2025-02-26T07:37:31">07:37:31, 26 февраля</time>
-                        <strong slot="nickname" aria-label="Никнейм пользователя">~юный~скуф~</strong>
-                        <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" /> -->
-                        <div aria-label="Текст комментария">кыш кыш отсюда</div>
-                      </post-comment>
-                    </article>
-                  </section>
                 </post-comment>
-              </article>
-            </section>
-          </post-comment>
-        </article>
-        <article aria-label="Комментарий">
-          <post-comment>
-            <time slot="datetime" datetime="2025-02-26T07:37:49">07:37:49, 26 февраля</time>
-            <strong slot="nickname" aria-label="Никнейм пользователя">Симулякр</strong>
-            <!-- <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" /> -->
-            <div aria-label="Текст комментария">Играю на изи сложности</div>
-          </post-comment>
-        </article>
+                <post-comment likes="1">
+                  <time slot="datetime" datetime="2025-02-26T07:37:31">07:37:31, 26 февраля</time>
+                  <span slot="nickname" aria-label="Никнейм пользователя">~юный~скуф~</span>
+                  <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" />
+                  <div aria-label="Текст комментария">кыш кыш отсюда</div>
+                </post-comment>
+              </section>
+            </post-comment>
+          </section>
+        </post-comment>
+        <post-comment>
+          <time slot="datetime" datetime="2025-02-26T07:37:49">07:37:49, 26 февраля</time>
+          <strong slot="nickname" aria-label="Никнейм пользователя">Симулякр</strong>
+          <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" />
+          <div aria-label="Текст комментария">Играю на изи сложности</div>
+        </post-comment>
       </section>
     </aside>
   </main>

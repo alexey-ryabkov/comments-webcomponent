@@ -2,6 +2,7 @@ import html from 'nanohtml';
 import raw from 'nanohtml/raw';
 import publishCommentEventHandler from '../event_handlers/publishComment';
 import inputCommentEventHandler from '../event_handlers/inputComment';
+import { setElementDisabled } from '../../components/PostComment/utils';
 
 export default function buildCommentAddingForm(
   form?: HTMLFormElement | null,
@@ -33,7 +34,7 @@ export default function buildCommentAddingForm(
     const button = form.querySelector(
       'button:not([type="reset"])',
     ) as HTMLButtonElement | null;
-    form._onReset = () => button && (button.disabled = true);
+    form._onReset = () => setElementDisabled(button, true);
   }
 
   form.addEventListener('submit', form._addCommentOnSubmit);

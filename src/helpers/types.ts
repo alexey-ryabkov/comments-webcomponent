@@ -1,7 +1,7 @@
 import { Comment, User } from '../components/PostComment';
 
 export type CommentMeta = Required<Omit<User, 'id'>> & {
-  userId?: string | number;
+  userId?: User['id'];
   datetime:
     | {
         iso: string;

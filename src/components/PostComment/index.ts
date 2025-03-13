@@ -19,9 +19,10 @@ class PostComment extends HTMLElement {
   static readonly INTENT_REPLY_EVENT_NAME = `${PostComment.COMPONENT_NAME}-intent-reply`;
   static readonly DELETE_EVENT_NAME = `${PostComment.COMPONENT_NAME}-delete`;
 
-  static EXT_TEMPLATE_ID = `${PostComment.COMPONENT_NAME}-template`;
-  static ANONIMUS_NICKNAME = 'Анонимный пользователь';
-  static ANONIMUS_AVATAR = 'https://placehold.co/50';
+  static extTemplateId = `${PostComment.COMPONENT_NAME}-template`;
+  static avatarSize = 50;
+  static anonimusNickname = 'Анонимный пользователь';
+  static anonimusAvatar = `https://placehold.co/${PostComment.avatarSize}`;
 
   protected static _sanitizer = new utils.HTMLSanitizer();
 
@@ -34,6 +35,7 @@ class PostComment extends HTMLElement {
   constructor(
     protected _initData?: PartialBy<Comment, 'timestamp'>,
     public template = PostComment._obtainTemplate(),
+    // protected _wrapper: HTMLElement | null = null,
     protected _wrapper: HTMLElement | null = utils.defaultCommentWrapper(),
   ) {
     super();
@@ -46,8 +48,8 @@ class PostComment extends HTMLElement {
         id,
         user: {
           id: userId,
-          nickname = PostComment.ANONIMUS_NICKNAME,
-          avatar = PostComment.ANONIMUS_AVATAR,
+          nickname = PostComment.anonimusNickname,
+          avatar = PostComment.anonimusAvatar,
           current = false,
         },
         timestamp = Date.now(),
@@ -65,8 +67,10 @@ class PostComment extends HTMLElement {
         this._buildCommentTextElement(text);
 
         this.likes = likes;
+
+        const wrapper = this._wrapper?.cloneNode(false) as typeof this._wrapper;
         this.replies = replies.map(
-          (reply) => new PostComment(reply, this.template, this._wrapper),
+          (reply) => new PostComment(reply, this.template, wrapper),
         );
 
         utils.setFlagAttrVal(this, 'granted', granted);
@@ -199,48 +203,61 @@ class PostComment extends HTMLElement {
   }
 
   protected _attachEventListeners() {
+    this._getElement('like-btn')?.addEventListener('click', () =>
+      this._handleLike(),
+    );
+
+    this._getElement('reply-btn')?.addEventListener('click', () =>
+      this._handleReply(),
+    );
+
+    this._getElement('delete-btn')?.addEventListener('click', () =>
+      this._handleDelete(),
+    );
+  }
+
+  protected _handleLike() {
+    // const likeBtn = e.target as HTMLButtonElement | null;
     const likeBtn = this._getElement('like-btn') as HTMLButtonElement | null;
-    likeBtn?.addEventListener('click', () => {
-      if (!this._liked) {
-        const likes = Number(this.getAttribute('likes') ?? 0) + 1;
-        this.setAttribute('likes', String(likes));
-        this._getElement('likes')?.replaceChildren(
-          document.createTextNode(String(likes)),
-        );
-        this.dispatchEvent(
-          new CustomEvent<LikeEventDetail>(PostComment.LIKE_EVENT_NAME, {
-            bubbles: true,
-            composed: true,
-            detail: { likes },
-          }),
-        );
-        utils.setElementDisabled(likeBtn, true);
-      }
-    });
-
-    this._getElement('reply-btn')?.addEventListener('click', () => {
-      this.dispatchEvent(
-        new CustomEvent<IntentReplyEventDetail>(
-          PostComment.INTENT_REPLY_EVENT_NAME,
-          {
-            bubbles: true,
-            composed: true,
-            detail: { comment: this },
-          },
-        ),
+    if (!this._liked) {
+      const likes = Number(this.getAttribute('likes') ?? 0) + 1;
+      this.setAttribute('likes', String(likes));
+      this._getElement('likes')?.replaceChildren(
+        document.createTextNode(String(likes)),
       );
-    });
-
-    this._getElement('delete-btn')?.addEventListener('click', () => {
-      this.delete();
       this.dispatchEvent(
-        new CustomEvent<DeleteEventDetail>(PostComment.DELETE_EVENT_NAME, {
+        new CustomEvent<LikeEventDetail>(PostComment.LIKE_EVENT_NAME, {
+          bubbles: true,
+          composed: true,
+          detail: { likes },
+        }),
+      );
+      utils.setElementDisabled(likeBtn, true);
+    }
+  }
+
+  protected _handleReply() {
+    this.dispatchEvent(
+      new CustomEvent<IntentReplyEventDetail>(
+        PostComment.INTENT_REPLY_EVENT_NAME,
+        {
           bubbles: true,
           composed: true,
           detail: { comment: this },
-        }),
-      );
-    });
+        },
+      ),
+    );
+  }
+
+  protected _handleDelete() {
+    this.delete();
+    this.dispatchEvent(
+      new CustomEvent<DeleteEventDetail>(PostComment.DELETE_EVENT_NAME, {
+        bubbles: true,
+        composed: true,
+        detail: { comment: this },
+      }),
+    );
   }
 
   protected _delete() {
@@ -268,7 +285,7 @@ class PostComment extends HTMLElement {
 
   protected static _obtainTemplate() {
     return document.querySelector(
-      `template#${PostComment.EXT_TEMPLATE_ID}`,
+      `template#${PostComment.extTemplateId}`,
     ) as HTMLTemplateElement | null;
   }
 
@@ -278,16 +295,19 @@ class PostComment extends HTMLElement {
 
   protected _buildAvatarElement(src: string) {
     let avatar: HTMLImageElement;
-    const wrapper = this._getSlotElemWrapper(SlotName.avatar);
-    if (wrapper instanceof HTMLImageElement) {
-      avatar = wrapper;
+    let wrapped = this._getSlotElemWrapper(SlotName.avatar);
+    if (wrapped instanceof HTMLImageElement) {
+      avatar = wrapped;
     } else {
       avatar = document.createElement('img');
-      if (wrapper) {
-        wrapper.replaceChildren(avatar);
+      if (wrapped) {
+        wrapped.replaceChildren(avatar);
+      } else {
+        wrapped = avatar;
       }
     }
     avatar.src = src;
+    utils.insertElem2slot(this, wrapped, SlotName.avatar);
   }
 
   protected _buildDatetimeElement(timestamp: number) {
@@ -322,9 +342,6 @@ class PostComment extends HTMLElement {
     ) {
       return elem;
     } else {
-      // if (typeof elem === 'string') {
-      //   elem = document.createTextNode(elem);
-      // }
       wrapper = document.createElement('div');
       wrapper.append(elem);
       this._slotElemsWrappers[name] = wrapper;
@@ -381,6 +398,3 @@ class PostComment extends HTMLElement {
   }
 }
 export default PostComment;
-// FIXME
-// @ts-expect-error FIXME for debug
-window.PostComment = PostComment;

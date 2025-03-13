@@ -1,6 +1,19 @@
 [
   {
     "id": 101,
-    "nickname": "BluePill"
+    "nickname": "BluePill",
+    "current": true
+  },
+  {
+    "id": 102,
+    "nickname": "~юный~скуф~"
+  },
+  {
+    "id": 103,
+    "nickname": "P0w3r"
+  },
+  {
+    "id": 104,
+    "nickname": "Симулякр"
   }
 ]

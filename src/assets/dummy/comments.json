@@ -1,0 +1,59 @@
+[
+  {
+    "id": 1001,
+    "user": 101,
+    "timestamp": 1740563333000,
+    "text": "Тетрис?",
+    "likes": 0,
+    "replies": [
+      {
+        "id": 1002,
+        "user": 102,
+        "timestamp": 1740563550000,
+        "text": "Нееее",
+        "likes": 0,
+        "replies": []
+      },
+      {
+        "id": 1003,
+        "user": 104,
+        "timestamp": 1740563598000,
+        "text": "Хм, ну нет... <small>(а похоже)</small>",
+        "likes": 1,
+        "replies": []
+      },
+      {
+        "id": 1004,
+        "user": 101,
+        "timestamp": 1740563625000,
+        "text": "Удаленный комментарий",
+        "deleted": true
+      }
+    ]
+  },
+  {
+    "id": 1005,
+    "user": 101,
+    "timestamp": 1740563672000,
+    "text": "A Quiet Place: The Road Ahead?",
+    "likes": 4,
+    "replies": [
+      {
+        "id": 1006,
+        "user": 102,
+        "timestamp": 1740563714000,
+        "text": "Да!",
+        "likes": 2,
+        "replies": [
+          {
+            "id": 1007,
+            "user": 103,
+            "timestamp": 1740563823000,
+            "text": "Был уверен что <u>The Quarry</u>(",
+            "likes": 1
+          }
+        ]
+      }
+    ]
+  }
+]

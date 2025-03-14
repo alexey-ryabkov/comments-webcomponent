@@ -1,7 +1,9 @@
 export default class HTMLSanitizer {
   public allowedTags: Set<string>;
 
-  constructor(allowedTags: string[] = ['b', 'i', 'u', 'strong', 'em']) {
+  constructor(
+    allowedTags: string[] = ['b', 'i', 'u', 's', 'small', 'mark', 'blockquote'],
+  ) {
     this.allowedTags = new Set(allowedTags);
   }
 

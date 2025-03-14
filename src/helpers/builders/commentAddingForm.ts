@@ -3,6 +3,7 @@ import raw from 'nanohtml/raw';
 import publishCommentEventHandler from '../event_handlers/publishComment';
 import inputCommentEventHandler from '../event_handlers/inputComment';
 import { setElementDisabled } from '../../components/PostComment/utils';
+import iconSprite from '../../assets/icons/sprite.svg?url';
 
 export default function buildCommentAddingForm(
   form?: HTMLFormElement | null,
@@ -17,9 +18,19 @@ export default function buildCommentAddingForm(
         minlength="1"
         maxlength="1024"
       ></textarea>
-      <button disabled>Отправить</button>
+      <button disabled>
+        <svg>
+          <use href="${iconSprite}#airplane" />
+        </svg>
+        <span>Отправить</span>
+      </button>
       ${raw(' ')}
-      <button type="reset">Отменить</button>
+      <button type="reset">
+        <svg>
+          <use href="${iconSprite}#cross" />
+        </svg>
+        <span>Отменить</span>
+      </button>
     </form>` as HTMLFormElement;
 
     (formContainer ?? commentsContainer).prepend(form);

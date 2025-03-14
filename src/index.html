@@ -10,26 +10,47 @@
 
 <body>
   <header class="container">
-    <nav class="grid">
-      <div>
-        <strong>GameZone</strong>
-      </div>
+    <nav class="grid grid_header">
       <ul>
+        <li><a href="#" class="logo-box">
+            <svg>
+              <use href="./assets/icons/sprite.svg#puzzle"></use>
+            </svg>
+            <strong>Game Zone</strong>
+          </a></li>
+      </ul>
+      <ul class="menu">
         <li><a href="#" class="contrast">Популярное</a></li>
         <li><a href="#">Свежее</a></li>
         <li><a href="#">Моя лента</a></li>
       </ul>
-      <div>
-        <button>Написать пост</button>
-        <button class="secondary">Войти</button>
-      </div>
+      <ul>
+        <li>
+          <button>
+            <svg>
+              <use href="./assets/icons/sprite.svg#pencil"></use>
+            </svg>
+            Написать пост
+          </button>
+        </li>
+        <li>
+          <button class="outline">
+            <svg>
+              <use href="./assets/icons/sprite.svg#user"></use>
+            </svg>
+            Войти
+          </button>
+        </li>
+      </ul>
     </nav>
   </header>
   <main class="container">
     <article>
       <h1>Топ-5 самых ожидаемых игр этого года</h1>
-      <img src="https://via.assets.so/game.jpg?w=1280&h=600"
-        alt="Картинка-превью: топ-5 самых ожидаемых игр этого года" />
+      <p>
+        <img src="https://via.assets.so/game.jpg?w=1280&h=600"
+          alt="Картинка-превью: топ-5 самых ожидаемых игр этого года" width="100%" />
+      </p>
       <p>
         В этом году нас ждёт множество захватывающих релизов, которые обещают
         подарить незабываемые впечатления. От амбициозных RPG до напряжённых
@@ -43,59 +64,127 @@
         заставят вас переосмыслить жанровые границы.
       </p>
     </article>
-    <hr />
     <aside>
+      <h3>Обсуждение</h3>
       <template id="post-comment-template">
         <style>
-          :host {}
+          button {
+            background: transparent;
+            border-radius: var(--button-border-radius);
+            border: none;
+            padding-inline: 0;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+            color: var(--text-color, dimgray);
+            transition: color var(--transition);
 
-          .post-comment {}
+            &:not([hidden]) {
+              gap: 0.25em;
+              align-items: center;
+              display: inline-flex;
+            }
 
-          .post-comment__wrapper {}
+            &:hover {
+              color: var(--contrast-color, black)
+            }
 
-          .post-comment__meta {
-            font-size: 0.8rem;
-            color: gray;
-            display: flex;
-            gap: 1rem;
+            &[disabled] {
+              pointer-events: none;
+              color: var(--muted-color, gray)
+            }
+
+            svg {
+              display: inline-block;
+              width: 20px;
+              aspect-ratio: 1;
+              transition: color var(--transition);
+            }
           }
 
-          .post-comment__avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
-            flex: none;
-          }
+          .post-comment {
+            color: var(--text-color, inherit);
 
-          .post-comment__avatar img {
-            object-fit: cover;
-            width: 100%;
-          }
+            &__wrapper {
+              display: flex;
+              flex-direction: column;
+              gap: var(--block-spacing-vertical, 1rem);
+            }
 
-          .post-comment__nickname :not(small) {
-            font-weight: bold;
-          }
+            &__wrapper:has(+&__actions) {
+              margin-block-end: var(--block-spacing-vertical, 1rem);
+            }
 
-          .post-comment__nickname+small {
-            display: none;
-          }
+            &__meta {
+              font-size: 0.8rem;
+              color: var(--muted-color, gray);
+              display: flex;
+              gap: 1rem;
+              align-items: center;
+            }
 
-          .post-comment__nickname_current+small {
-            display: initial;
-          }
+            &__avatar {
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              overflow: hidden;
+              flex: none;
 
-          .post-comment__content {
-            width: 100%;
-          }
+              img {
+                object-fit: cover;
+                width: 100%;
+              }
+            }
 
-          .post-comment__actions {
-            margin-top: 0.5rem;
-          }
+            &__nickname {
+              color: var(--contrast-color, black);
 
-          .post-comment__replies {
-            margin-top: 1.5rem;
-            margin-left: 2rem;
+              &:not(small) {
+                font-weight: bold;
+              }
+
+              +small {
+                display: none;
+              }
+
+              &.post-comment__nickname_current+small {
+                display: initial;
+              }
+            }
+
+            &__content {
+              width: 100%;
+            }
+
+            &__actions {
+              display: flex;
+              gap: 1rem;
+              align-items: baseline;
+            }
+
+            &__replies {
+              margin-inline-start: 2rem;
+            }
+
+            &__like-btn {
+              svg {
+                color: var(--primary-color, lightsteelblue);
+              }
+
+              &:hover svg {
+                color: var(--primary-color-hover, steelblue);
+              }
+            }
+
+            &__delete-btn {
+              svg {
+                color: var(--danger-color, red);
+              }
+
+              &:hover svg {
+                color: var(--danger-color-hover, maroon);
+              }
+            }
           }
         </style>
         <div class="post-comment">
@@ -107,7 +196,7 @@
                 </slot>
               </div>
               <div>
-                <div>
+                <div class="post-comment__nickname-box">
                   <span class="post-comment__nickname">
                     <slot name="nickname">
                       <strong aria-label="Никнейм пользователя">Анонимный пользователь</strong>
@@ -130,41 +219,70 @@
           </div>
           <div class="post-comment__actions">
             <button class="post-comment__like-btn" aria-label="Поставить лайк">
-              ❤️ <span class="post-comment__likes">0</span>
+              <svg>
+                <use href="./assets/icons/sprite.svg#heart"></use>
+              </svg>
+              <span class="post-comment__likes">0</span>
             </button>
             <button class="post-comment__reply-btn" aria-label="Ответить на комментарий">
+              <svg>
+                <use href="./assets/icons/sprite.svg#chat"></use>
+              </svg>
               Ответить
             </button>
             <button class="post-comment__delete-btn" aria-label="Удалить комментарий">
+              <svg>
+                <use href="./assets/icons/sprite.svg#trash"></use>
+              </svg>
               Удалить
             </button>
           </div>
           <div class="post-comment__replies">
             <slot name="replies">
-              <section aria-label="Ответы на комментарий"></section>
+              <div aria-label="Ответы на комментарий"></div>
             </slot>
           </div>
         </div>
       </template>
       <form id="add-comment-form">
         <textarea placeholder="Написать комментарий к посту..." required minlength="1" maxlength="1024"></textarea>
-        <button disabled>Отправить</button>
-        <button type="reset">Отменить</button>
+        <button disabled>
+          <svg>
+            <use href="./assets/icons/sprite.svg#airplane"></use>
+          </svg>
+          Отправить
+        </button>
+        <button type="reset">
+          <svg>
+            <use href="./assets/icons/sprite.svg#cross"></use>
+          </svg>
+          Отменить
+        </button>
+        <button id="add-comment-by-api" type="button" class="outline">
+          <svg>
+            <use href="./assets/icons/sprite.svg#cli"></use>
+          </svg>
+          Добавить через API
+        </button>
       </form>
-      <button id="add-comment-by-api">Добавить через API</button>
+
       <section id="post-comments-tread">
         <post-comment likes="3" by-current-user granted>
           <time slot="datetime" datetime="2025-02-26T07:22:08">07:22:08, 26 февраля</time>
           <strong slot="nickname" aria-label="Никнейм пользователя">BluePill</strong>
-          <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" />
+          <img slot="avatar"
+            src="https://api.dicebear.com/9.x/avataaars/png?seed=BluePill&backgroundColor=0172ad&size=50"
+            alt="Аватар пользователя BluePill" />
           <div aria-label="Текст комментария">
-            А причем тут скайрим?
+            Казалось бы - причем тут скайрим?
           </div>
           <section slot="replies" aria-label="Ответы на комментарий">
             <post-comment>
               <time slot="datetime" datetime="2025-02-26T07:35:43">07:35:43, 26 февраля</time>
               <strong slot="nickname" aria-label="Никнейм пользователя">~юный~скуф~</strong>
-              <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя ~юный~скуф~" />
+              <img slot="avatar"
+                src="https://api.dicebear.com/9.x/avataaars/png?seed=~юный~скуф~&backgroundColor=0172ad&size=50"
+                alt="Аватар пользователя ~юный~скуф~" />
               <div aria-label="Текст комментария">азаза</div>
             </post-comment>
           </section>
@@ -172,27 +290,27 @@
         <post-comment likes="1" deleted>
           <time slot="datetime" datetime="2025-02-26T07:29:55">07:29:55, 26 февраля</time>
           <span slot="nickname" aria-label="Никнейм пользователя">P0w3r</span>
-          <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя P0w3r" />
-          <div aria-label="Текст комментария">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
-            repellat, ea mollitia dolore vero voluptates eligendi eum beatae
-            amet, asperiores suscipit provident possimus soluta quas nam
-            sapiente sit voluptas rerum?
-          </div>
+          <img slot="avatar" src="https://api.dicebear.com/9.x/avataaars/png?seed=P0w3r&backgroundColor=0172ad&size=50"
+            alt="Аватар пользователя P0w3r" />
+          <div aria-label="Текст комментария">В текущей ситуации даже за гифки как эта кидаю в ЧС. Без негатива</div>
           <section slot="replies" aria-label="Ответы на комментарий">
             <post-comment likes="7" by-current-user granted>
               <time slot="datetime" datetime="2025-02-26T07:37:49">07:37:49, 26 февраля</time>
               <span slot="nickname" aria-label="Никнейм пользователя">BluePill</span>
-              <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя BluePill" />
+              <img slot="avatar"
+                src="https://api.dicebear.com/9.x/avataaars/png?seed=BluePill&backgroundColor=0172ad&size=50"
+                alt="Аватар пользователя BluePill" />
               <div aria-label="Текст комментария">
-                Лол, этот чел чсит даже за гифки, которые ему не
+                Лол, этот чел чсит<blockquote>даже за гифки</blockquote> которые ему не
                 нравятся
               </div>
               <section slot="replies" aria-label="Ответы на комментарий">
                 <post-comment>
                   <time slot="datetime" datetime="2025-02-26T07:31:19">07:31:19, 26 февраля</time>
                   <span slot="nickname" aria-label="Никнейм пользователя">Симулякр</span>
-                  <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" />
+                  <img slot="avatar"
+                    src="https://api.dicebear.com/9.x/avataaars/png?seed=Симулякр&backgroundColor=0172ad&size=50"
+                    alt="Аватар пользователя Симулякр" />
                   <div aria-label="Текст комментария">
                     Че за гифка то?
                   </div>
@@ -200,7 +318,9 @@
                 <post-comment likes="1">
                   <time slot="datetime" datetime="2025-02-26T07:37:31">07:37:31, 26 февраля</time>
                   <span slot="nickname" aria-label="Никнейм пользователя">~юный~скуф~</span>
-                  <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" />
+                  <img slot="avatar"
+                    src="https://api.dicebear.com/9.x/avataaars/png?seed=~юный~скуф~&backgroundColor=0172ad&size=50"
+                    alt="Аватар пользователя Симулякр" />
                   <div aria-label="Текст комментария">кыш кыш отсюда</div>
                 </post-comment>
               </section>
@@ -210,16 +330,21 @@
         <post-comment>
           <time slot="datetime" datetime="2025-02-26T07:37:49">07:37:49, 26 февраля</time>
           <strong slot="nickname" aria-label="Никнейм пользователя">Симулякр</strong>
-          <img slot="avatar" src="https://placehold.co/50" alt="Аватар пользователя Симулякр" />
-          <div aria-label="Текст комментария">Играю на изи сложности</div>
+          <img slot="avatar"
+            src="https://api.dicebear.com/9.x/avataaars/png?seed=Симулякр&backgroundColor=0172ad&size=50"
+            alt="Аватар пользователя Симулякр" />
+          <div aria-label="Текст комментария">Играю на <mark>изи</mark> сложности</div>
         </post-comment>
       </section>
     </aside>
   </main>
   <footer class="container">
-    <small>
-      <a href="https://github.com/alexey-ryabkov/comments-webcomponent?tab=readme-ov-file">О проекте</a>
-    </small>
+    <center>
+      <small>
+        <a href="https://github.com/alexey-ryabkov/comments-webcomponent?tab=readme-ov-file" class="secondary">О
+          проекте</a>
+      </small>
+    </center>
   </footer>
 </body>
 

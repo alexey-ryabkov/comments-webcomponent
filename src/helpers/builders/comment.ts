@@ -1,6 +1,7 @@
 import html from 'nanohtml';
 import raw from 'nanohtml/raw';
 import { CommentData } from '../types';
+import PostComment from '../../components/PostComment';
 
 export default function buildComment(
   {
@@ -32,5 +33,5 @@ export default function buildComment(
   </post-comment>`;
   container.appendChild(comment);
 
-  return comment;
+  return comment as PostComment;
 }

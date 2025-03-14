@@ -1,0 +1,116 @@
+@use '~@picocss/pico/scss/colors' as *;
+
+:root {
+  --color-red: #{$red-500};
+  --color-red-darker: #{$red-600};
+
+  --primary-color: var(--pico-primary);
+  --primary-color-hover: var(--pico-primary-hover);
+  --primary-bg: var(--pico-primary-bg);
+  --primary-bg-hover: var(--pico-primary-hover-bg);
+
+  --secondary-color: var(--pico-secondary);
+  --secondary-color-hover: var(--pico-secondary-hover);
+  --secondary-bg: var(--pico-secondary-bg);
+  --secondary-bg-hover: var(--pico-secondary-hover-bg);
+
+  --danger-color: var(--color-red);
+  --danger-color-hover: var(--color-red-darker);
+  --danger-bg-color: var(--color-red);
+  --danger-bg-color-hover: var(--color-red-darker);
+
+  --contrast-color: var(--pico-contrast);
+  --text-color: var(--pico-color);
+  --muted-color: var(--pico-muted-color);
+
+  --typography-spacing-vertical: var(--pico-typography-spacing-vertical);
+  --block-spacing-vertical: var(--pico-block-spacing-vertical);
+
+  --button-border-radius: var(--pico-border-radius);
+
+  --transition: var(--pico-transition);
+}
+
+article:not(:has(+ *)) {
+  margin-block-end: 0;
+}
+
+button {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+
+  svg {
+    display: inline-block;
+    width: 24px;
+    aspect-ratio: 1;
+    color: white;
+  }
+
+  &.outline svg {
+    color: var(--primary-background);
+  }
+}
+
+.logo-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  svg {
+    display: inline-block;
+    width: 32px;
+    aspect-ratio: 1;
+  }
+
+  strong {
+    font-weight: normal;
+    font-size: 1.5rem;
+  }
+}
+
+.grid_header {
+  grid-template-columns: auto 1fr auto;
+}
+
+.menu {
+  justify-self: center;
+}
+
+post-comment {
+  &:not(:defined) {
+    display: block;
+    min-height: 100px;
+    width: 100%;
+    background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+
+    & * {
+      visibility: hidden;
+    }
+  }
+
+  [slot='replies'] {
+    margin-block-end: 0 !important;
+
+    &:not(:empty, :has(> form[hidden]:only-child)) {
+      margin-block-start: var(--block-spacing-vertical, 1rem);
+    }
+  }
+}
+
+@keyframes loading {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}

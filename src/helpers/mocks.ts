@@ -44,7 +44,7 @@ function getDummyComments(dummyComments: DummyComment[]): Comment[] {
       text,
       likes,
       replies: replies ? getDummyComments(replies) : undefined,
-      granted: granted || curDummyUser?.id.toString() === String(id),
+      granted: granted || curDummyUser?.id.toString() === String(user),
       deleted,
     }),
   );

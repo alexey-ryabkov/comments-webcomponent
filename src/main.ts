@@ -1,22 +1,27 @@
-import type {
-  LikeEventDetail,
-  IntentReplyEventDetail,
-  DeleteEventDetail,
+import PostComment, {
+  type LikeEventDetail,
+  type IntentReplyEventDetail,
+  type DeleteEventDetail,
 } from './components/PostComment';
-import PostComment from './components/PostComment';
+import { setElementDisabled } from './components/PostComment/utils';
+import {
+  type CommentInputEventDetail,
+  COMMENT_INPUT_EVENT_NAME,
+} from './helpers/event_handlers/inputComment';
+import {
+  type CommentPublishedEventDetail,
+  COMMENT_PUBLISHED_EVENT_NAME,
+} from './helpers/event_handlers/publishComment';
 import {
   buildCommentAddingForm,
   deleteCommentEventHandler,
   likeCommentEventHandler,
   intentReplyEventHandler,
+  scroll2elem,
 } from './helpers';
-import {
-  type CommentInputEventDetail,
-  COMMENT_INPUT_EVENT_NAME,
-} from './helpers/event_handlers/inputComment';
 import { dummyComments } from './helpers/mocks';
 import '@picocss/pico';
-import './global.css';
+import './global.scss';
 
 customElements.define(PostComment.COMPONENT_NAME, PostComment);
 
@@ -43,6 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'reset',
         () => (resetButton.hidden = true),
       );
+      addCommentForm.addEventListener(COMMENT_PUBLISHED_EVENT_NAME, (e) => {
+        const {
+          detail: { comment },
+        } = e as CustomEvent<CommentPublishedEventDetail>;
+        scroll2elem(comment);
+      });
     }
 
     commentsThread.addEventListener(PostComment.LIKE_EVENT_NAME, (e) =>
@@ -59,13 +70,17 @@ document.addEventListener('DOMContentLoaded', () => {
     document
       .getElementById('add-comment-by-api')
       ?.addEventListener('click', (e) => {
-        const button = e.target as HTMLButtonElement;
-
+        let scrolled = false;
         dummyComments.forEach((data) => {
           const comment = new PostComment(data);
           commentsThread.append(comment);
+          if (!scrolled) {
+            scroll2elem(comment);
+            scrolled = true;
+          }
         });
-        button.disabled = true;
+
+        setElementDisabled(e.target as HTMLButtonElement, true);
       });
   }
 });

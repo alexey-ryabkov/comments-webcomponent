@@ -7,14 +7,17 @@
   "scripts": {
     "dev": "parcel",
     "build": "parcel build",
-    "lint": "eslint \"**/*.ts\" --fix",
-    "format": "prettier \"**/*.{html,md}\" --write",
+    "lint:scripts": "eslint \"**/*.{js,ts}\" --fix",
+    "lint:styles": "stylelint '**/*.{css,scss,html}' --fix",
+    "format": "prettier --write \"src/**/*.{css,scss,js,ts,html}\" \"*.md\"",
+    "clear": "rm -rf .parcel-cache dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Alexey Ryabkov <xelaris@ya.com>",
   "license": "ISC",
   "devDependencies": {
+    "@parcel/transformer-sass": "2.13.3",
     "@types/lodash": "4.17.15",
     "@typescript-eslint/eslint-plugin": "8.24.1",
     "@typescript-eslint/parser": "8.24.1",
@@ -22,13 +25,17 @@
     "eslint-config-prettier": "10.0.1",
     "eslint-plugin-prettier": "5.2.3",
     "parcel": "2.13.3",
+    "postcss-html": "1.8.0",
+    "postcss-nested": "7.0.2",
     "prettier": "3.5.2",
+    "stylelint": "16.15.0",
+    "stylelint-config-standard-scss": "14.0.0",
+    "stylelint-prettier": "5.0.3",
     "typescript": "5.7.3"
   },
   "dependencies": {
     "@picocss/pico": "2.0.6",
     "dompurify": "3.2.4",
-    "lodash": "4.17.21",
     "nanohtml": "1.10.0"
   }
 }

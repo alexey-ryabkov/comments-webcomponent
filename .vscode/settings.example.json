@@ -4,5 +4,9 @@
   },
   "[javascript,typescript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  }
+  },
+  "[scss,css,html]": {
+    "editor.defaultFormatter": "stylelint.vscode-stylelint"
+  },
+  "stylelint.validate": ["scss", "css", "html"]
 }

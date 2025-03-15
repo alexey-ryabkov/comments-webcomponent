@@ -35,7 +35,6 @@ class PostComment extends HTMLElement {
   constructor(
     protected _initData?: PartialBy<Comment, 'timestamp'>,
     public template = PostComment._obtainTemplate(),
-    // protected _wrapper: HTMLElement | null = null,
     protected _wrapper: HTMLElement | null = utils.defaultCommentWrapper(),
   ) {
     super();
@@ -68,10 +67,12 @@ class PostComment extends HTMLElement {
 
         this.likes = likes;
 
-        const wrapper = this._wrapper?.cloneNode(false) as typeof this._wrapper;
-        this.replies = replies.map(
-          (reply) => new PostComment(reply, this.template, wrapper),
-        );
+        this.replies = replies.map((reply) => {
+          const wrapper = this._wrapper?.cloneNode(
+            false,
+          ) as typeof this._wrapper;
+          return new PostComment(reply, this.template, wrapper);
+        });
 
         utils.setFlagAttrVal(this, 'granted', granted);
         utils.setFlagAttrVal(this, 'by-current-user', current);
